@@ -1,0 +1,116 @@
+package battleshipTeamProject;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+
+@SuppressWarnings("serial")
+public class Battleship extends JFrame {
+
+	private JPanel contentPane;
+	private Random rand = new Random();
+	private JPanel panel;
+	//private JButton btnSouthButton;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Battleship frame = new Battleship();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**Constructor
+	 * Create the frame.
+	 */
+	public Battleship() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		panel = new JPanel(); //created a BorderLayout JPanel just so I can have other things around the edges if necessary 
+		contentPane.add(panel, BorderLayout.CENTER);
+		panel.setLayout(new GridLayout(8, 8, 0, 0));
+		
+		//testerButton(); This method just creates the south button that I use for testing and copying code to my other, more important buttons.
+		//contentPane.add(btnSouthButton, BorderLayout.SOUTH);
+		
+		
+		createButtonBoard();
+		
+	}
+
+	/** This method just creates the south button that I use for testing and copying code to my other, more important buttons.
+	 * Anything in this method can be completely commented out when desired, provided that the method call and contentPane.add
+	 * are also commented out.
+	 * 
+	 */
+//	private void testerButton() {
+//		btnSouthButton = new JButton("South Button");
+//		btnSouthButton.setBackground(new Color(0, 255, 255));
+//	}
+
+	/** Should create 64 buttons. With the buttons unnamed, it may be difficult to implement action listeners on specific buttons. 
+	 * I'd ideally like to implement the action listener code into a different method, but this may not be possible w/ unnamed JButtons,
+	 * unless of course we just create our own JButton class that inherits from JButton.
+	 * 
+	 * I think that the easiest thing for managing boat sizes would just be some arithmetic.
+	 */
+	private void createButtonBoard() {
+		int b1 = rand.nextInt(64) + 1; //b1-b3 just store int values that correspond to a location on the 8x8 grid.
+		int b2 = rand.nextInt(64) + 1; 
+		int b3 = rand.nextInt(64) + 1; 
+		
+		for (int i = 1; i < 65; i++) //iterates 64 times, populating the grid with buttons
+		{
+			if (i == b1 || i == b2 || i == b3) //if the iteration is looking at a button that is meant to represent a boat.
+			{
+				JButton boatButton = new JButton("I'm the boat");
+				boatButton.setBackground(new Color (0, 255, 255)); //default (unclicked) button color is blue
+				boatButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						boatButton.setBackground(new Color (255, 0, 0)); //updates button color to red.
+						boatButton.setText("You Sunk My Battleship!"); //updates button text
+					}
+				});
+				panel.add(boatButton);
+			} else //otherwise, if the button being looked at is open water
+			{
+				//contentPane.add(new JButton(i + " ")); //have to concat i w/ a space to ensure it is accepted as a string
+				JButton manyButtons = new JButton(i + ""); 
+				manyButtons.setBackground(new Color(0, 255, 255));
+				manyButtons.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						manyButtons.setBackground(new Color (255, 255, 255)); //updates color to white
+						manyButtons.setText("Miss!"); //updates button text
+					}
+				});
+				panel.add(manyButtons); //have to concat i w/ a space to ensure it is accepted as a string
+			}
+			
+		}
+		
+	}
+
+}
